@@ -1,9 +1,39 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>My First Website</title>
+  <title>Send Input to Backend</title>
 </head>
 <body>
-  <h1>नमस्ते दुनिया! ये मेरी पहली वेबसाइट है।</h1>
+  <h2>तुम्हारा नाम बताओ:</h2>
+
+  <form id="nameForm">
+    <input type="text" id="nameInput" placeholder="तुम्हारा नाम" required />
+    <button type="submit">भेजो</button>
+  </form>
+
+  <h3 id="response"></h3>
+
+  <script>
+    document.getElementById('nameForm').addEventListener('submit', function (e) {
+      e.preventDefault(); // Page reload रोकने के लिए
+
+      const name = document.getElementById('nameInput').value;
+
+      fetch('/api/greet', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ name: name })
+      })
+      .then(response => response.json())
+      .then(data => {
+        document.getElementById('response').innerText = data.message;
+      })
+      .catch(error => {
+        document.getElementById('response').innerText = 'Error: Backend से जवाब नहीं आया';
+      });
+    });
+  </script>
 </body>
 </html>
